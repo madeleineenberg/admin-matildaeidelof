@@ -115,7 +115,7 @@
     $data['title'] = $post[0]->post_title;
     $data['content'] = $post[0]->post_content;
     $data['slug'] = $post[0]->post_name;
-    $data['afc'] = get_fields($post[0]->ID);
+    $data['acf'] = get_fields($post[0]->ID);
 
     return $data;
 
@@ -136,7 +136,7 @@
     $data['title'] = $post[0]->post_title;
     $data['content'] = $post[0]->post_content;
     $data['slug'] = $post[0]->post_name;
-    $data['afc'] = get_fields($post[0]->ID);
+    $data['acf'] = get_fields($post[0]->ID);
 
     return $data;
 
