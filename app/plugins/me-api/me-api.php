@@ -8,6 +8,7 @@
  * Author URL: https://www.madeleineenberg.com
  */
 
+
  //en anpassad endpoint för 'post' och som specificerar hur 'post-datan' ska se ut.
  function me_posts(){
      $args = [
@@ -32,6 +33,7 @@
      return $data;
  };
 
+
 //funktion för att hitta rätt 'post' med 'slug
  function me_post($slug){
     $args = [
@@ -52,6 +54,7 @@
 
  }
 
+
  //Anpassad endpoint för att hämta custom post types för FAQ
 
  function me_faqs(){
@@ -71,6 +74,30 @@
             $data[$i]['slug'] = $post->post_name;
             $data[$i]['heading'] = get_field('heading', $post->ID);
             $data[$i]['info_text'] = get_field('info_text', $post->ID);
+           $i++;
+   
+        }
+        return $data;
+ }
+
+
+ //Anpassad enpoint för portfolio 'grid'
+ function me_portfolio(){
+    $args = [
+        'numberposts' => 99999,
+        'post_type' => 'portfolio'
+    ];
+        $posts = get_posts($args);
+
+        $data = [];
+        $i = 0;
+   
+        foreach($posts as $post){
+            $data[$i]['id'] = $post->ID;
+            $data[$i]['title'] = $post->post_title;
+            $data[$i]['class'] = get_field('grid_design', $post->ID);
+            $data[$i]['grid'] = get_field('grid', $post->ID);
+
            $i++;
    
         }
@@ -151,31 +178,43 @@
      register_rest_route('me/v1', 'posts', [
         'methods' => 'GET',
         'callback' => 'me_posts',
+        'permission_callback' => '__return_true'
      ]);
 
      register_rest_route('me/v1', 'posts/(?P<slug>[a-zA-Z0-9-]+)', array(
         'methods' => 'GET',
         'callback' => 'me_post',
+        'permission_callback' => '__return_true'
      ));
 
      register_rest_route('me/v1', 'faq', [
         'methods' => 'GET',
         'callback' => 'me_faqs',
+        'permission_callback' => '__return_true'
+     ]);
+
+     register_rest_route('me/v1', 'portfolio', [
+        'methods' => 'GET',
+        'callback' => 'me_portfolio',
+        'permission_callback' => '__return_true'
      ]);
 
      register_rest_route('me/v1', 'pages', [
         'methods' => 'GET',
         'callback' => 'me_pages',
+        'permission_callback' => '__return_true'
      ]);
 
      register_rest_route('me/v1', 'pages/title/(?P<slug>[a-zA-Z0-9-]+)', array(
         'methods' => 'GET',
         'callback' => 'me_page_slug',
+        'permission_callback' => '__return_true'
      ));
 
      register_rest_route('me/v1', 'pages/(?P<id>\d+)', array(
         'methods' => 'GET',
         'callback' => 'me_page_id',
+        'permission_callback' => '__return_true'
      ));
 
  });

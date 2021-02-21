@@ -629,3 +629,22 @@ function create_posttype() {
 // Hooking up our function to theme setup
 add_action( 'init', 'create_posttype' );
 
+function create_portfolio() {
+ 
+    register_post_type( 'portfolio',
+    // CPT Options
+        array(
+            'labels' => array(
+                'name' => __('PORTFOLIO' ),
+                'singular_name' => __( 'gallery' )
+            ),
+            'public' => true,
+            'has_archive' => true,
+            'rewrite' => array('slug' => 'portfolio'),
+            'show_in_rest' => true,
+ 
+        )
+    );
+}
+
+add_action( 'init', 'create_portfolio' );
