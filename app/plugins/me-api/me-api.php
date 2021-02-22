@@ -60,7 +60,8 @@
  function me_faqs(){
     $args = [
         'numberposts' => 99999,
-        'post_type' => 'faq'
+        'post_type' => 'faq',
+        'order' => 'ASC'
     ];
         $posts = get_posts($args);
 
@@ -85,7 +86,8 @@
  function me_portfolio(){
     $args = [
         'numberposts' => 99999,
-        'post_type' => 'portfolio'
+        'post_type' => 'portfolio',
+        'order' => 'ASC'
     ];
         $posts = get_posts($args);
 
