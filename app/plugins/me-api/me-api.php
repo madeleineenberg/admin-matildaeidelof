@@ -150,6 +150,7 @@
 
  }
 
+
  //anpassad endpoint för 'pages' via id
  function me_page_id($id){
    
@@ -171,6 +172,30 @@
 
 
  }
+
+  //anpassad endpoint för footer-settings
+  function me_footer_slug($slug){
+   $args = [
+       'name' => $slug['slug'],
+       'post_type' => 'page' 
+   ];
+
+   $post = get_posts($args);
+   
+
+   $data['id'] = $post[0]->ID;
+   $data['slug'] = $post[0]->post_name;
+   $data['title'] = get_field('footer_title', $post[0]->ID);
+   $data['email'] = get_field('email', $post[0]->ID);
+   $data['phone'] = get_field('phone', $post[0]->ID);
+   $data['icon_1'] = get_field( 'icon_1', $post[0]->ID);
+   $data['icon_2'] = get_field( 'icon_2', $post[0]->ID);
+   $data['icon_3'] = get_field('icon_3', $post[0]->ID);
+
+
+   return $data;
+
+}
 
 
  
@@ -216,6 +241,12 @@
      register_rest_route('me/v1', 'pages/(?P<id>\d+)', array(
         'methods' => 'GET',
         'callback' => 'me_page_id',
+        'permission_callback' => '__return_true'
+     ));
+     
+     register_rest_route('me/v1', 'footer', array(
+        'methods' => 'GET',
+        'callback' => 'me_footer_slug',
         'permission_callback' => '__return_true'
      ));
 
