@@ -614,13 +614,13 @@ add_action( 'wp_footer', 'twentytwentyone_add_ie_class' );
 
 
 /**
- * Egna funktioner för WP admin
+ * Egna funktioner för WP admin ----------------------------------------------------------------------->
  */
 
+ //skapar FAQ i admin
 function create_posttype() {
  
     register_post_type( 'faq',
-    // CPT Options
         array(
             'labels' => array(
                 'name' => __( 'FAQ' ),
@@ -634,9 +634,9 @@ function create_posttype() {
         )
     );
 }
-// Hooking up our function to theme setup
-add_action( 'init', 'create_posttype' );
 
+add_action( 'init', 'create_posttype' );
+//skapar portfolio i admin
 function create_portfolio() {
  
     register_post_type( 'portfolio',
@@ -657,6 +657,27 @@ function create_portfolio() {
 
 add_action( 'init', 'create_portfolio' );
 
+//skapar products i admin
+function create_products() {
+ 
+    register_post_type( 'products',
+    // CPT Options
+        array(
+            'labels' => array(
+                'name' => __('PRODUCTS' ),
+                'singular_name' => __( 'product' )
+            ),
+            'public' => true,
+            'has_archive' => true,
+            'rewrite' => array('slug' => 'products'),
+            'show_in_rest' => true,
+ 
+        )
+    );
+}
+
+add_action( 'init', 'create_products' );
+
 //Skapa fotter-settings
 
 add_filter('use_block_editor_for_post', 'disable_gutenberg_on_settings_page', 5, 2);
@@ -672,7 +693,7 @@ function disable_gutenberg_on_settings_page($can, $post){
 }
 
 function hide_settings_page($query) {
-    if ( !is_admin() && !is_main_query() ) {
+    if ( !is_admin() && !$query->is_main_query() ) {
         return;
     }    
     global $typenow;
@@ -721,5 +742,5 @@ function edit_site_settings_title() {
 
 add_action( 'admin_title', 'edit_site_settings_title' );
 
-function op($slug) { $page_url_id = get_page_by_path( $slug ); return $page_url_id->ID; } 
-the_field('my_title', op('footer-settings')); 
+// function op($slug) { $page_url_id = get_page_by_path( $slug ); return $page_url_id->ID; } 
+// the_field('my_title', op('footer-settings')); 
