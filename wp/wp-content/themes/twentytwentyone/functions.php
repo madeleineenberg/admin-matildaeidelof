@@ -644,11 +644,12 @@ function create_portfolio() {
         array(
             'labels' => array(
                 'name' => __('PORTFOLIO' ),
-                'singular_name' => __( 'gallery' )
+                'singular_name' => __( 'gallery' ),
             ),
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'portfolio'),
+			'menu_icon' => 'dashicons-format-gallery',
             'show_in_rest' => true,
  
         )
@@ -670,6 +671,7 @@ function create_products() {
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'products'),
+			'menu_icon'   => 'dashicons-products',
             'show_in_rest' => true,
  
         )
@@ -678,7 +680,8 @@ function create_products() {
 
 add_action( 'init', 'create_products' );
 
-//Skapa fotter-settings
+
+//SKAPAR FOOTER-SETTINGS PAGE
 
 add_filter('use_block_editor_for_post', 'disable_gutenberg_on_settings_page', 5, 2);
 
@@ -744,3 +747,144 @@ add_action( 'admin_title', 'edit_site_settings_title' );
 
 // function op($slug) { $page_url_id = get_page_by_path( $slug ); return $page_url_id->ID; } 
 // the_field('my_title', op('footer-settings')); 
+
+
+
+//TAR BORT GUTENBERG BLOCK EDITOR FRÅN ALLA PAGES
+
+function my_disable_gutenberg_for_post_type( $is_enabled, $post_type ) {
+    if ( 'page' == $post_type ) {  
+        return false;
+    }
+
+    return $is_enabled;
+}
+if ( version_compare($GLOBALS['wp_version'], '5.0-beta', '>') ) {
+    // WP > 5 beta
+    add_filter( 'use_block_editor_for_post_type', 'my_disable_gutenberg_for_post_type', 10, 2 );
+} else {
+    // WP < 5 beta
+    add_filter( 'gutenberg_can_edit_post_type', 'my_disable_gutenberg_for_post_type', 10, 2 );
+
+}
+
+//TAR BORT GUTENBERG BLOCK EDITOR FRÅN ALLA FAQ
+
+function my_disable_gutenberg_for_faq( $is_enabled, $post_type ) {
+    if ( 'faq' == $post_type ) {  
+        return false;
+    }
+
+    return $is_enabled;
+}
+if ( version_compare($GLOBALS['wp_version'], '5.0-beta', '>') ) {
+    // WP > 5 beta
+    add_filter( 'use_block_editor_for_post_type', 'my_disable_gutenberg_for_faq', 10, 2 );
+} else {
+    // WP < 5 beta
+    add_filter( 'gutenberg_can_edit_post_type', 'my_disable_gutenberg_for_faq', 10, 2 );
+}
+
+//TAR BORT GUTENBERG BLOCK EDITOR FRÅN ALLA PORTFOLIO
+
+function my_disable_gutenberg_for_portfolio( $is_enabled, $post_type ) {
+    if ( 'portfolio' == $post_type ) {  
+        return false;
+    }
+
+    return $is_enabled;
+}
+if ( version_compare($GLOBALS['wp_version'], '5.0-beta', '>') ) {
+    // WP > 5 beta
+    add_filter( 'use_block_editor_for_post_type', 'my_disable_gutenberg_for_portfolio', 10, 2 );
+} else {
+    // WP < 5 beta
+    add_filter( 'gutenberg_can_edit_post_type', 'my_disable_gutenberg_for_portfolio', 10, 2 );
+}
+
+//TAR BORT GUTENBERG BLOCK EDITOR FRÅN ALLA PRODUCTS
+
+function my_disable_gutenberg_for_products( $is_enabled, $post_type ) {
+    if ( 'products' == $post_type ) {  
+        return false;
+    }
+
+    return $is_enabled;
+}
+if ( version_compare($GLOBALS['wp_version'], '5.0-beta', '>') ) {
+    // WP > 5 beta
+    add_filter( 'use_block_editor_for_post_type', 'my_disable_gutenberg_for_products', 10, 2 );
+} else {
+    // WP < 5 beta
+    add_filter( 'gutenberg_can_edit_post_type', 'my_disable_gutenberg_for_products', 10, 2 );
+}
+
+
+
+//RADERA KOMMENTARER FRÅN ADMIN
+
+function remove_comments(){
+	global $wp_admin_bar;
+	$wp_admin_bar->remove_menu('comments');
+}
+add_action( 'wp_before_admin_bar_render', 'remove_comments' );
+
+
+// Disable support for comments and trackbacks in post types
+function df_disable_comments_post_types_support() {
+    $post_types = get_post_types();
+    foreach ($post_types as $post_type) {
+        if(post_type_supports($post_type, 'comments')) {
+            remove_post_type_support($post_type, 'comments');
+            remove_post_type_support($post_type, 'trackbacks');
+        }
+    }
+}
+add_action('admin_init', 'df_disable_comments_post_types_support');
+// Close comments on the front-end
+function df_disable_comments_status() {
+    return false;
+}
+add_filter('comments_open', 'df_disable_comments_status', 20, 2);
+add_filter('pings_open', 'df_disable_comments_status', 20, 2);
+// Hide existing comments
+function df_disable_comments_hide_existing_comments($comments) {
+    $comments = array();
+    return $comments;
+}
+add_filter('comments_array', 'df_disable_comments_hide_existing_comments', 10, 2);
+// Remove comments page in menu
+function df_disable_comments_admin_menu() {
+    remove_menu_page('edit-comments.php');
+}
+add_action('admin_menu', 'df_disable_comments_admin_menu');
+// Redirect any user trying to access comments page
+function df_disable_comments_admin_menu_redirect() {
+    global $pagenow;
+    if ($pagenow === 'edit-comments.php') {
+        wp_redirect(admin_url()); exit;
+    }
+}
+add_action('admin_init', 'df_disable_comments_admin_menu_redirect');
+// Remove comments metabox from dashboard
+function df_disable_comments_dashboard() {
+    remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
+}
+add_action('admin_init', 'df_disable_comments_dashboard');
+// Remove comments links from admin bar
+function df_disable_comments_admin_bar() {
+    if (is_admin_bar_showing()) {
+        remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
+    }
+}
+add_action('init', 'df_disable_comments_admin_bar');
+
+
+//TAR BORT POST FRÅN ADMIN
+
+function remove_menu () 
+{
+   remove_menu_page('edit.php');
+} 
+
+add_action('admin_menu', 'remove_menu');
