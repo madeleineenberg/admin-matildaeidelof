@@ -105,7 +105,7 @@
         }
         return $data;
  }
- //Anpassad enpoint för products
+//  //Anpassad enpoint för products
  function me_products(){
     $args = [
         'numberposts' => 99999,
@@ -200,9 +200,31 @@
  }
 
   //anpassad endpoint för footer-settings
-  function me_footer_slug($slug){
+//   function me_footer_slug($slug){
+//    $args = [
+//        'name' => $slug['slug'],
+//        'post_type' => 'page' 
+//    ];
+
+//    $post = get_posts($args);
+   
+
+//    $data['id'] = $post[0]->ID;
+//    $data['slug'] = $post[0]->post_name;
+//    $data['title'] = get_field('footer_title', $post[0]->ID);
+//    $data['email'] = get_field('email', $post[0]->ID);
+//    $data['phone'] = get_field('phone', $post[0]->ID);
+//    $data['icon_1'] = get_field( 'icon_1', $post[0]->ID);
+//    $data['icon_2'] = get_field( 'icon_2', $post[0]->ID);
+//    $data['icon_3'] = get_field('icon_3', $post[0]->ID);
+
+
+//    return $data;
+
+// }
+  function me_footer_id($id){
    $args = [
-       'name' => $slug['slug'],
+       'p' => $id['id'],
        'post_type' => 'page' 
    ];
 
@@ -251,7 +273,7 @@
         'callback' => 'me_portfolio',
         'permission_callback' => '__return_true'
      ]);
-
+     
      register_rest_route('me/v1', 'products', [
         'methods' => 'GET',
         'callback' => 'me_products',
@@ -276,9 +298,15 @@
         'permission_callback' => '__return_true'
      ));
      
-     register_rest_route('me/v1', 'footer', array(
+     register_rest_route('me/v1', 'footer-settings', array(
         'methods' => 'GET',
         'callback' => 'me_footer_slug',
+        'permission_callback' => '__return_true'
+     ));
+
+     register_rest_route('me/v1', 'footer-settings/(?P<id>\d+)', array(
+        'methods' => 'GET',
+        'callback' => 'me_footer_id',
         'permission_callback' => '__return_true'
      ));
 

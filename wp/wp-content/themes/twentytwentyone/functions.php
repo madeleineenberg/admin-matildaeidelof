@@ -681,7 +681,7 @@ function create_products() {
 add_action( 'init', 'create_products' );
 
 
-//SKAPAR FOOTER-SETTINGS PAGE
+// //SKAPAR FOOTER-SETTINGS PAGE
 
 add_filter('use_block_editor_for_post', 'disable_gutenberg_on_settings_page', 5, 2);
 
@@ -745,8 +745,8 @@ function edit_site_settings_title() {
 
 add_action( 'admin_title', 'edit_site_settings_title' );
 
-// function op($slug) { $page_url_id = get_page_by_path( $slug ); return $page_url_id->ID; } 
-// the_field('my_title', op('footer-settings')); 
+function op($slug) { $page_url_id = get_page_by_path( $slug ); return $page_url_id->ID; } 
+the_field('my_title', op('footer-settings')); 
 
 
 
