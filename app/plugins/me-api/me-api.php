@@ -105,6 +105,32 @@
         }
         return $data;
  }
+ //Anpassad enpoint för products
+ function me_products(){
+    $args = [
+        'numberposts' => 99999,
+        'post_type' => 'products',
+        'order' => 'ASC'
+    ];
+        $posts = get_posts($args);
+
+        $data = [];
+        $i = 0;
+   
+        foreach($posts as $post){
+            $data[$i]['id'] = $post->ID;
+            $data[$i]['title'] = $post->post_title;
+            $data[$i]['product'] = get_field('title', $post->ID);
+            $data[$i]['price'] = get_field('price', $post->ID);
+            $data[$i]['stock'] = get_field('stock', $post->ID);
+            $data[$i]['description'] = get_field('description', $post->ID);
+            $data[$i]['image'] = get_field('image', $post->ID);
+
+           $i++;
+   
+        }
+        return $data;
+ }
 
 //anpassad endpoint för 'pages'
 
@@ -223,6 +249,12 @@
      register_rest_route('me/v1', 'portfolio', [
         'methods' => 'GET',
         'callback' => 'me_portfolio',
+        'permission_callback' => '__return_true'
+     ]);
+
+     register_rest_route('me/v1', 'products', [
+        'methods' => 'GET',
+        'callback' => 'me_products',
         'permission_callback' => '__return_true'
      ]);
 
