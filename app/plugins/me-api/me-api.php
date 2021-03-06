@@ -10,6 +10,7 @@
 
 
  //en anpassad endpoint för 'post' och som specificerar hur 'post-datan' ska se ut.
+
  function me_posts(){
      $args = [
          'numberposts' => 99999,
@@ -251,7 +252,7 @@
  
  add_action('rest_api_init', function(){
      register_rest_route('me/v1', 'posts', [
-        'methods' => 'GET',
+        'methods' => 'GET, POST',
         'callback' => 'me_posts',
         'permission_callback' => '__return_true'
      ]);
@@ -273,7 +274,7 @@
         'callback' => 'me_portfolio',
         'permission_callback' => '__return_true'
      ]);
-     
+
      register_rest_route('me/v1', 'products', [
         'methods' => 'GET',
         'callback' => 'me_products',

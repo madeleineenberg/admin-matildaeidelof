@@ -10,6 +10,9 @@
  */
 
 // This theme requires WordPress 5.3 or later.
+
+
+
 if ( version_compare( $GLOBALS['wp_version'], '5.3', '<' ) ) {
 	require get_template_directory() . '/inc/back-compat.php';
 }
@@ -882,9 +885,41 @@ add_action('init', 'df_disable_comments_admin_bar');
 
 //TAR BORT POST FRÅN ADMIN
 
-function remove_menu () 
-{
-   remove_menu_page('edit.php');
-} 
+// function remove_menu () 
+// {
+//    remove_menu_page('edit.php');
+// } 
 
-add_action('admin_menu', 'remove_menu');
+// add_action('admin_menu', 'remove_menu');
+
+
+
+add_filter(
+	'jwt_auth_whitelist',
+	function ( $endpoints ) {
+		$whitelists = array(
+			'/wp-json/oembed/1.0/*',
+			'/wp-json/wp/v2/*',
+			'/wp-json/post-views-counter/*',
+			'/wp-json/yoast/v1/*',
+			'/wp-json/yoast/v1/myyoast/*',
+			'/wp-json/wc/blocks/*',
+			'/wp-json/wc/store/*',
+			'/wp-json/wc/v1/*',
+			'/wp-json/wc/v2/*',
+			'/wp-json/wc/v3/*',
+			'/wp-json/wccom-site/v1/*',
+			'/wp-json/wc-analytics/*',
+			'/wp-json/wc-admin/*',
+			'/wp-json/me/v1/*',
+		);
+
+		foreach ( $whitelists as $whitelist ) {
+			if ( ! in_array( $whitelist, $endpoints, true ) ) {
+				array_push( $endpoints, $whitelist );
+			}
+		}
+
+		return $endpoints;
+	}
+);
