@@ -35,6 +35,27 @@
  };
 
 
+//  function me_add_post($request) {
+//    // question attributes from angular code
+//    $parameters = $request->get_params();
+//    $content = $parameters['content'];
+//    update_field('me_add_post', $content);
+//  }
+
+
+//  function me_add_post($request){
+    
+//    //Do logic here
+   
+//    // Prepare response
+//    $response = array();
+//    $response['status'] = true;
+//    $response['content'] = 'done';
+   
+//    return $response;
+
+// }
+
 //funktion för att hitta rätt 'post' med 'slug
  function me_post($slug){
     $args = [
@@ -311,8 +332,14 @@
         'permission_callback' => '__return_true'
      ));
 
- });
+   //   register_rest_route('me/v1', 'posts/(?P<slug>[a-zA-Z0-9-]+)', array(
+   //    'methods' => 'POST',
+   //    'callback' => 'me_add_post',
+   //    'permission_callback' => '__return_true'
+      
+   //  ));
 
+ });
 
 
 
