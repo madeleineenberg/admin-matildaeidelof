@@ -35,26 +35,37 @@
  };
 
 
-//  function me_add_post($request) {
-//    // question attributes from angular code
-//    $parameters = $request->get_params();
-//    $content = $parameters['content'];
-//    update_field('me_add_post', $content);
-//  }
-
-
-//  function me_add_post($request){
-    
-//    //Do logic here
+ function me_add_post(WP_REST_Request $request) {
    
-//    // Prepare response
-//    $response = array();
-//    $response['status'] = true;
-//    $response['content'] = 'done';
    
-//    return $response;
+   global $wpdb;
+   $data = array();
 
-// }
+   $parameters = $request->get_params();
+
+   $the_content = $parameters['the_content'];
+   $post_title = $parameters['post_title'];
+
+   $my_post = array(
+      'post_title' => wp_strip_all_tags( $post_title),
+      'post_content' => $the_content,
+      'post_status' => 'publish',
+   );
+   $new_post_id = wp_insert_post($my_post);
+
+   if ($new_post_id) {
+      $data['status']='Post added Successfully.';  
+  }
+  else{
+   $data['status']='post failed..';
+ } 
+  return $data;
+
+   // update_field('me_add_post', $content);
+ }
+
+
+
 
 //funktion för att hitta rätt 'post' med 'slug
  function me_post($slug){
@@ -332,12 +343,14 @@
         'permission_callback' => '__return_true'
      ));
 
-   //   register_rest_route('me/v1', 'posts/(?P<slug>[a-zA-Z0-9-]+)', array(
-   //    'methods' => 'POST',
-   //    'callback' => 'me_add_post',
-   //    'permission_callback' => '__return_true'
+
+     register_rest_route('me/v1', 'posts/add', array(
+      'methods' => 'POST',
+      'callback' => 'me_add_post',
+      'permission_callback' => '__return_true'
       
-   //  ));
+    ));
+
 
  });
 
