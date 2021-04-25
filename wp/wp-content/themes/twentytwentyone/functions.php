@@ -885,12 +885,12 @@ add_action('init', 'df_disable_comments_admin_bar');
 
 //TAR BORT POST FRÅN ADMIN
 
-// function remove_menu () 
-// {
-//    remove_menu_page('edit.php');
-// } 
+function remove_menu () 
+{
+   remove_menu_page('edit.php');
+} 
 
-// add_action('admin_menu', 'remove_menu');
+add_action('admin_menu', 'remove_menu');
 
 
 
